@@ -1,15 +1,15 @@
-# fly.toml app configuration file generated for br-deploy on 2025-07-02T19:19:01Z
+# fly.toml app configuration file generated for br-online on 2025-07-03T22:55:09Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'br-deploy'
+app = 'br-online'
 primary_region = 'cdg'
 
 [build]
 
 [http_service]
-  internal_port = 80
+  internal_port = 10000
   force_https = true
   auto_stop_machines = 'stop'
   auto_start_machines = true
