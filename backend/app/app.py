@@ -87,7 +87,7 @@ if __name__ == "__main__":
         print(f"⚠️ ATTENTION: L'image du collier n'a pas été trouvée à: {NECKLACE_PATH}")
 
     # Configuration pour production et développement
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORT', 10000))
     debug = os.environ.get('FLASK_ENV', 'development') == 'development'
     
     app.run(host='0.0.0.0', port=port, debug=debug)
