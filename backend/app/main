@@ -1,0 +1,11 @@
+if __name__ == "__main__":
+    # Chemin de l'image à tester
+    image_path = "/chemin/vers/une/photo.jpg"  # ← Mets ici le chemin d'une photo à tester
+    output_path = "/chemin/vers/resultat.jpg"  # ← Où sauvegarder le résultat
+
+    try:
+        result = apply_necklace(image_path)
+        cv2.imwrite(output_path, result)
+        print(f"✅ Collier placé et image enregistrée : {output_path}")
+    except Exception as e:
+        print(f"❌ Erreur : {e}")

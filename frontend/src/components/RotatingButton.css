@@ -1,0 +1,45 @@
+.rotating-button {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.rotating-button > div {
+  position: relative;
+}
+
+.rotating-button > div div:first-of-type {
+  will-change: transform;
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  transition-duration: 0.5s;
+  transition-property: transform, opacity;
+  transform: translate(0, 0) rotate(0);
+  transform-origin: top left;
+  opacity: 1;
+}
+
+.rotating-button > div div:last-of-type {
+  will-change: transform;
+  transition-duration: 0.5s;
+  transition-property: transform, opacity;
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  transform: translate(0, 100%) rotate(12deg);
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  right: 0;
+  left: 0;
+  transform-origin: top left;
+  opacity: 0;
+}
+
+.rotating-button:hover > div div:first-of-type {
+  transform: translate(0, -100%) rotate(-12deg);
+  opacity: 0;
+}
+
+.rotating-button:hover > div div:last-of-type {
+  transform: translate(0, 0) rotate(0);
+  opacity: 1;
+}

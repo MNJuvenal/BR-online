@@ -1,0 +1,7 @@
+flask
+flask-cors
+opencv-python
+mediapipe==0.10.3
+ultralytics
+numpy
+torch==2.5.1

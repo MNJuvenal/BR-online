@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+:root {
+  font-family: 'Atyp Display', system-ui, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color-scheme: dark;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'TT Ramillas', serif;
+  line-height: 1.2;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  @apply bg-primary text-secondary;
+}
+
+/* Utility classes for fonts */
+.font-display {
+  font-family: 'Atyp Display', sans-serif;
+}
+
+.font-heading {
+  font-family: 'TT Ramillas', serif;
+}
+
+/* Styles personnalisés pour les scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-primary;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-accent/50 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-accent;
+}
+
+/* Styles pour les contrôles de range */
+input[type="range"] {
+  @apply appearance-none bg-white/10 h-2 rounded-lg;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  @apply appearance-none w-4 h-4 rounded-full bg-accent cursor-pointer;
+}
+
+/* Animation de gradient */
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient 8s linear infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Effet de flou sur les cartes */
+.glass-card {
+  @apply bg-glass-bg backdrop-blur-sm border border-white/10;
+}
+
+/* Animation de hover sur les boutons */
+.hover-effect {
+  @apply transform transition-all duration-300 hover:scale-105 hover:shadow-lg;
+}
