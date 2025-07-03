@@ -6,18 +6,35 @@ from ultralytics import YOLO
 # === Initialisation YOLO ===
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(BASE_DIR, "Content", "model_vf4.pt")
-model = YOLO(MODEL_PATH)
+
+print(f"🔍 Recherche du modèle YOLO à: {MODEL_PATH}")
+
+if os.path.exists(MODEL_PATH):
+    print("✅ Modèle YOLO trouvé, chargement...")
+    model = YOLO(MODEL_PATH)
+    print("🧠 Modèle YOLO chargé avec succès")
+else:
+    print("⚠️ ATTENTION: Modèle YOLO non trouvé, utilisation du modèle par défaut")
+    model = None
 
 
 def detect_neck_mask(image_path, model, width, height):
-    results = model.predict(image_path, conf=0.4, task="segment")[0]
-    for i, box in enumerate(results.boxes):
-        cls_id = int(box.cls[0])
-        label = results.names[cls_id]
-        if label.lower() == "neck":
-            mask_data = results.masks.data[i].cpu().numpy()
-            mask = (mask_data * 255).astype(np.uint8)
-            return cv2.resize(mask, (width, height))
+    if model is None:
+        print("⚠️ Modèle YOLO non disponible, retour de masque vide")
+        return None
+        
+    try:
+        results = model.predict(image_path, conf=0.4, task="segment")[0]
+        for i, box in enumerate(results.boxes):
+            cls_id = int(box.cls[0])
+            label = results.names[cls_id]
+            if label.lower() == "neck":
+                mask_data = results.masks.data[i].cpu().numpy()
+                mask = (mask_data * 255).astype(np.uint8)
+                return cv2.resize(mask, (width, height))
+    except Exception as e:
+        print(f"⚠️ Erreur lors de la détection YOLO: {e}")
+    
     return None
 
 

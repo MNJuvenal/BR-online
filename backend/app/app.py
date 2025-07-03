@@ -7,17 +7,27 @@ import json
 import importlib
 import sys
 
+print("📦 Imports réussis")
+
 # S'assurer qu'on utilise le bon répertoire
 current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, current_dir)
 
+print(f"📁 Répertoire courant: {current_dir}")
+
 import necklace2D
+
+print("🧠 Module necklace2D importé")
 
 # Forcer le rechargement du module
 importlib.reload(necklace2D)
 
+print("🔄 Module necklace2D rechargé")
+
 app = Flask(__name__)
 CORS(app)
+
+print("🌐 Application Flask initialisée")
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(os.path.dirname(CURRENT_DIR))
@@ -81,14 +91,24 @@ def apply_necklace_endpoint():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    if os.path.exists(NECKLACE_PATH):
-        print(f"✅ Image du collier trouvée: {NECKLACE_PATH}")
-    else:
-        print(f"⚠️ ATTENTION: L'image du collier n'a pas été trouvée à: {NECKLACE_PATH}")
+    try:
+        print("🚀 Démarrage de l'application Flask...")
+        
+        if os.path.exists(NECKLACE_PATH):
+            print(f"✅ Image du collier trouvée: {NECKLACE_PATH}")
+        else:
+            print(f"⚠️ ATTENTION: L'image du collier n'a pas été trouvée à: {NECKLACE_PATH}")
 
-    # Configuration pour production et développement
-    port = int(os.environ.get('PORT', 10000))
-    debug = os.environ.get('FLASK_ENV', 'development') == 'development'
-    
-    app.run(host='0.0.0.0', port=port, debug=debug)
+        # Configuration pour production et développement
+        port = int(os.environ.get('PORT', 10000))
+        debug = os.environ.get('FLASK_ENV', 'development') == 'development'
+        
+        print(f"🌐 Démarrage sur le port: {port}")
+        print(f"🔧 Mode debug: {debug}")
+        
+        app.run(host='0.0.0.0', port=port, debug=debug)
+    except Exception as e:
+        print(f"❌ Erreur lors du démarrage: {e}")
+        import traceback
+        traceback.print_exc()
 
