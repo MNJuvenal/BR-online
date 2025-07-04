@@ -1,4 +1,4 @@
-from flask import Flask, request, send_file, jsonify
+from flask import Flask, request, send_file, jsonify, send_from_directory
 from flask_cors import CORS
 import cv2
 import os
@@ -24,14 +24,27 @@ importlib.reload(necklace2D)
 
 print("🔄 Module necklace2D rechargé")
 
-app = Flask(__name__)
+# Configuration des chemins
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(os.path.dirname(CURRENT_DIR))
+NECKLACE_PATH = os.path.join(PROJECT_ROOT, "data", "usefull_necklace", "necklace2k.png")
+FRONTEND_DIST = os.path.join(PROJECT_ROOT, "frontend", "dist")
+
+# Créer l'app Flask avec le dossier static pour le frontend
+app = Flask(__name__, static_folder=FRONTEND_DIST, static_url_path='')
 CORS(app)
 
 print("🌐 Application Flask initialisée")
 
-CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_ROOT = os.path.dirname(os.path.dirname(CURRENT_DIR))
-NECKLACE_PATH = os.path.join(PROJECT_ROOT, "data", "usefull_necklace", "necklace2k.png")
+# Route pour servir le frontend React
+@app.route('/')
+def serve_frontend():
+    return send_from_directory(FRONTEND_DIST, 'index.html')
+
+# Route pour servir les assets du frontend
+@app.route('/<path:filename>')
+def serve_frontend_assets(filename):
+    return send_from_directory(FRONTEND_DIST, filename)
 
 @app.route("/health", methods=["GET"])
 def health():
