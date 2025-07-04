@@ -1,16 +1,9 @@
 services:
-  # Application complète (Frontend + Backend)
+  # Backend Flask uniquement
   - type: web
-    name: bleu-reflet-app
+    name: bleu-reflet-backend
     env: python
-    buildCommand: |
-      # Installer les dépendances Python
-      pip install -r requirements.txt
-      # Installer Node.js et NPM
-      curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
-      apt-get install -y nodejs
-      # Builder le frontend
-      cd frontend && npm install && npm run build
+    buildCommand: pip install -r requirements.txt
     startCommand: gunicorn --bind 0.0.0.0:$PORT --workers 1 --timeout 120 --chdir backend wsgi:app
     envVars:
       - key: PYTHON_VERSION
