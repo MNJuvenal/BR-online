@@ -146,7 +146,7 @@ const PhotoTestView: React.FC = () => {
         formData.append("necklace", selectedNecklace);
         formData.append("landmarks", JSON.stringify(detectedLandmarks));
 
-        const res = await fetch("https://bleu-reflet-backend.onrender.com/apply-necklace", {
+        const res = await fetch("https://br-online.onrender.com/apply-necklace", {
           method: "POST",
           body: formData,
         });
