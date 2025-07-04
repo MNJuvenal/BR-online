@@ -86,20 +86,29 @@ def health():
 
 @app.route("/apply-necklace", methods=["POST"])
 def apply_necklace_endpoint():
-    if 'image' not in request.files:
-        return jsonify({"error": "Aucune image reçue"}), 400
-
     try:
-        necklace_name = request.form.get('necklace', 'necklace2k.png')
-        necklace_path = os.path.join(PROJECT_ROOT, "data", "usefull_necklace", necklace_name)
-        if not os.path.exists(necklace_path):
-            return jsonify({"error": f"Collier introuvable: {necklace_name}"}), 400
+        if 'image' not in request.files:
+            app.logger.error("Aucune image reçue dans la requête.")
+            return jsonify({"error": "Aucune image reçue"}), 400
 
-        # Récupération des landmarks depuis le frontend
+        # Vérification des autres paramètres
+        necklace_name = request.form.get('necklace', 'necklace2k.png')
         landmarks_json = request.form.get("landmarks")
+
         if not landmarks_json:
+            app.logger.error("Aucun landmark reçu dans la requête.")
             return jsonify({"error": "Aucun landmark reçu"}), 400
 
+        # Log des données reçues
+        app.logger.info(f"Requête reçue avec necklace: {necklace_name} et landmarks: {landmarks_json}")
+
+        # Définir le chemin du collier
+        necklace_path = os.path.join(PROJECT_ROOT, "data", "usefull_necklace", necklace_name)
+        if not os.path.exists(necklace_path):
+            app.logger.error(f"Collier introuvable: {necklace_name}")
+            return jsonify({"error": f"Collier introuvable: {necklace_name}"}), 400
+
+        # Charger les landmarks
         landmarks = json.loads(landmarks_json)
 
         uploaded_file = request.files['image']
@@ -129,8 +138,8 @@ def apply_necklace_endpoint():
                 )
 
     except Exception as e:
-        print(f"Erreur lors du traitement: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+        app.logger.error(f"Erreur lors du traitement de la requête: {str(e)}")
+        return jsonify({"error": "Erreur interne du serveur", "message": str(e)}), 500
 
 if __name__ == "__main__":
     try:
