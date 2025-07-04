@@ -1,4 +1,4 @@
-from flask import Flask, request, send_file, jsonify, send_from_directory
+from flask import Flask, request, send_file, jsonify, send_from_directory, Response
 from flask_cors import CORS
 import cv2
 import os
@@ -140,6 +140,11 @@ def apply_necklace_endpoint():
     except Exception as e:
         app.logger.error(f"Erreur lors du traitement de la requête: {str(e)}")
         return jsonify({"error": "Erreur interne du serveur", "message": str(e)}), 500
+
+@app.after_request
+def log_response_details(response):
+    app.logger.info(f"Réponse envoyée : Status {response.status_code}, Content-Length {response.headers.get('Content-Length')}")
+    return response
 
 if __name__ == "__main__":
     try:
