@@ -30,21 +30,50 @@ PROJECT_ROOT = os.path.dirname(os.path.dirname(CURRENT_DIR))
 NECKLACE_PATH = os.path.join(PROJECT_ROOT, "data", "usefull_necklace", "necklace2k.png")
 FRONTEND_DIST = os.path.join(PROJECT_ROOT, "frontend", "dist")
 
-# Créer l'app Flask avec le dossier static pour le frontend
-app = Flask(__name__, static_folder=FRONTEND_DIST, static_url_path='')
+# Vérifier si le dossier dist existe
+DIST_EXISTS = os.path.exists(FRONTEND_DIST)
+print(f"📁 Dossier dist existe: {DIST_EXISTS}")
+print(f"📁 Chemin dist: {FRONTEND_DIST}")
+
+# Créer l'app Flask avec ou sans dossier static
+if DIST_EXISTS:
+    app = Flask(__name__, static_folder=FRONTEND_DIST, static_url_path='')
+    print("✅ Flask configuré avec dossier static")
+else:
+    app = Flask(__name__)
+    print("⚠️ Flask configuré sans dossier static")
+
 CORS(app)
 
 print("🌐 Application Flask initialisée")
 
-# Route pour servir le frontend React
+# Route pour servir le frontend React (seulement si dist existe)
 @app.route('/')
 def serve_frontend():
-    return send_from_directory(FRONTEND_DIST, 'index.html')
+    if DIST_EXISTS:
+        try:
+            return send_from_directory(FRONTEND_DIST, 'index.html')
+        except Exception as e:
+            print(f"❌ Erreur lors du service du frontend: {e}")
+            return jsonify({"error": "Frontend non disponible", "message": str(e)}), 500
+    else:
+        return jsonify({
+            "message": "Backend Flask opérationnel",
+            "status": "Frontend non buildé",
+            "endpoints": ["/health", "/apply-necklace"]
+        })
 
-# Route pour servir les assets du frontend
+# Route pour servir les assets du frontend (seulement si dist existe)
 @app.route('/<path:filename>')
 def serve_frontend_assets(filename):
-    return send_from_directory(FRONTEND_DIST, filename)
+    if DIST_EXISTS:
+        try:
+            return send_from_directory(FRONTEND_DIST, filename)
+        except Exception as e:
+            print(f"❌ Erreur lors du service de l'asset {filename}: {e}")
+            return jsonify({"error": f"Asset {filename} non trouvé"}), 404
+    else:
+        return jsonify({"error": "Frontend non disponible"}), 404
 
 @app.route("/health", methods=["GET"])
 def health():

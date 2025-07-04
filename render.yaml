@@ -1,28 +1,16 @@
 services:
-  # Frontend (React/Vite)
+  # Application complète (Frontend + Backend)
   - type: web
-    name: bleu-reflet-frontend
-    env: static
-    buildCommand: cd frontend && npm install && npm run build
-    staticPublishPath: frontend/dist
-    headers:
-      - path: /*
-        name: X-Frame-Options
-        value: DENY
-      - path: /*
-        name: X-Content-Type-Options
-        value: nosniff
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
-
-services:
-  # Backend (Python Flask)
-  - type: web
-    name: bleu-reflet-backend
+    name: bleu-reflet-app
     env: python
-    buildCommand: pip install -r requirements.txt
+    buildCommand: |
+      # Installer les dépendances Python
+      pip install -r requirements.txt
+      # Installer Node.js et NPM
+      curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+      apt-get install -y nodejs
+      # Builder le frontend
+      cd frontend && npm install && npm run build
     startCommand: gunicorn --bind 0.0.0.0:$PORT --workers 1 --timeout 120 --chdir backend wsgi:app
     envVars:
       - key: PYTHON_VERSION
