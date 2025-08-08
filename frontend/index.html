@@ -10,9 +10,15 @@
     <!-- Polices -->
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     
-    <!-- Préchargement des modèles TensorFlow.js -->
-    <link rel="preload" as="fetch" href="https://tfhub.dev/mediapipe/tfjs-model/face-landmarks-detection/1/default/1/model.json" crossorigin="anonymous">
-    <link rel="preload" as="fetch" href="https://tfhub.dev/mediapipe/tfjs-model/posenet/mobilenet/float/075/1/model.json" crossorigin="anonymous">
+    <!-- Font Awesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Préchargement des modèles TensorFlow.js - Commenté car causait des erreurs CORS -->
+    <!-- <link rel="preload" as="fetch" href="https://tfhub.dev/mediapipe/tfjs-model/face-landmarks-detection/1/default/1/model.json" crossorigin="anonymous"> -->
+    <!-- <link rel="preload" as="fetch" href="https://tfhub.dev/mediapipe/tfjs-model/posenet/mobilenet/float/075/1/model.json" crossorigin="anonymous"> -->
+    
+    <meta http-equiv="Cross-Origin-Embedder-Policy" content="require-corp">
+    <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin">
   </head>
   <body>
     <div id="root"></div>

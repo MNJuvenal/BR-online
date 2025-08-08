@@ -1,55 +1,66 @@
-import React from "react";
+import React from 'react';
 
-interface Necklace {
-  name: string;
-  path: string;
+interface NecklaceCarouselProps {
+  showCarousel: boolean;
+  onClose: () => void;
+  displayedItems: Array<{ name: string; url: string; path: string }>;
+  selectedNecklaces: { name: string; url: string; path: string } | null;
+  onToggleSelection: (item: { name: string; url: string; path: string }) => void;
+  activeCategoryTitle: string;
 }
 
-interface Props {
-  necklaces: Necklace[];
-  selected: string;
-  onSelect: (path: string) => void;
-}
+const NecklaceCarousel: React.FC<NecklaceCarouselProps> = ({
+  showCarousel,
+  onClose,
+  displayedItems,
+  selectedNecklaces,
+  onToggleSelection,
+  activeCategoryTitle,
+}) => {
+  if (!showCarousel) return null;
 
-const NecklaceCarousel: React.FC<Props> = ({ necklaces, selected, onSelect }) => {
   return (
-    <div className="flex items-center gap-2 px-3 py-2 bg-white/20 backdrop-blur-md rounded-full shadow overflow-x-auto max-w-full">
-      {necklaces.map((necklace) => (
-        <button
-          key={necklace.path}
-          onClick={() => onSelect(necklace.path)}
-          className={`flex-shrink-0 p-1 rounded-full border transition focus:outline-none ${
-            selected === necklace.path
-              ? "border-emerald-400 ring-1 ring-emerald-300"
-              : "border-transparent"
-          }`}
-        >
-          <img
-            src={`/assets/colliers/${necklace.path}`}
-            alt={necklace.name}
-            className="w-10 h-10 object-contain"
-          />
-        </button>
-      ))}
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 max-w-4xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-gray-800">{activeCategoryTitle}</h2>
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700 text-2xl"
+          >
+            <i className="fas fa-times"></i>
+          </button>
+        </div>
 
-      {/* Séparateur vertical */}
-      <div className="h-6 w-px bg-white/30 mx-2"></div>
-
-      {/* Bouton retour ou masquer */}
-      <button
-        className="flex-shrink-0 p-2 rounded-full hover:bg-white/10 transition"
-        aria-label="Masquer"
-      >
-        <svg
-          className="w-4 h-4 text-white"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-        </svg>
-      </button>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {displayedItems.map((item, index) => {
+            const isSelected = selectedNecklaces?.url === item.url;
+            return (
+              <div
+                key={index}
+                className={`relative cursor-pointer rounded-lg overflow-hidden border-2 transition-all duration-300 ${
+                  isSelected ? 'border-blue-500 shadow-lg' : 'border-gray-200 hover:border-gray-300'
+                }`}
+                onClick={() => onToggleSelection(item)}
+              >
+                <img
+                  src={item.url}
+                  alt={item.name}
+                  className="w-full h-48 object-cover"
+                />
+                <div className="p-3">
+                  <p className="text-sm font-medium text-gray-800 truncate">{item.name}</p>
+                </div>
+                {isSelected && (
+                  <div className="absolute top-2 right-2 bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">
+                    <i className="fas fa-check"></i>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 };
